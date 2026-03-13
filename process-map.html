@@ -8,8 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
+      height: 100%;
       font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
-      background: transparent;
+      background: #F9FAFB;
       color: #1F2937;
       -webkit-font-smoothing: antialiased;
     }
@@ -18,6 +19,9 @@
       max-width: 760px;
       margin: 0 auto;
       padding: 4px 6px;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
@@ -25,6 +29,7 @@
       border-radius: 10px;
       padding: 14px 18px 12px;
       margin-bottom: 10px;
+      flex-shrink: 0;
     }
     .header-eyebrow {
       font-size: 10px; font-weight: 600;
@@ -44,12 +49,12 @@
       line-height: 1.3;
     }
 
-    /* Steps grid */
     .steps {
       display: flex;
       gap: 0;
       position: relative;
       padding: 0 2px;
+      flex-shrink: 0;
     }
 
     .step {
@@ -66,7 +71,6 @@
     .step:hover { background: rgba(0,0,0,0.02); }
     .step.active:hover { background: rgba(128,234,255,0.08); }
 
-    /* Connector line */
     .step:not(:last-child)::after {
       content: '';
       position: absolute;
@@ -77,14 +81,11 @@
       background: #E5E7EB;
       z-index: 0;
     }
-    .step.active:not(:last-child)::after {
-      background: #80EAFF;
-    }
+    .step.active:not(:last-child)::after,
     .step.done:not(:last-child)::after {
       background: #80EAFF;
     }
 
-    /* Circle */
     .step-circle {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -106,11 +107,6 @@
       border: 2px solid #50D0ED;
       box-shadow: 0 0 0 3px rgba(128,234,255,0.25);
     }
-    .step-circle.after {
-      background: #F3F4F6;
-      color: #9CA3AF;
-      border: 2px solid #E5E7EB;
-    }
 
     .step-label {
       font-size: 11px; font-weight: 600;
@@ -125,7 +121,6 @@
     }
     .step.active .step-label { color: #0A3D4F; font-weight: 700; }
 
-    /* Role badge under step */
     .step-role {
       font-size: 9px;
       font-weight: 600;
@@ -136,72 +131,73 @@
       border-radius: 3px;
       line-height: 1.3;
     }
-    .role-you {
-      background: #E0F7FF;
-      color: #0E7490;
-    }
-    .role-hr {
-      background: #F3F4F6;
-      color: #6B7280;
-    }
-    .role-both {
-      background: #ECFDF5;
-      color: #065F46;
-    }
+    .role-you { background: #E0F7FF; color: #0E7490; }
+    .role-hr { background: #F3F4F6; color: #6B7280; }
+    .role-both { background: #ECFDF5; color: #065F46; }
 
-    /* Detail panel */
     .detail {
       margin-top: 10px;
       background: #fff;
       border: 1px solid #E5E7EB;
       border-radius: 8px;
-      padding: 14px 16px;
-      min-height: 80px;
-      transition: all 0.15s ease;
+      padding: 16px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .detail-header {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .detail-num {
-      width: 24px; height: 24px;
+      width: 26px; height: 26px;
       border-radius: 50%;
       background: #80EAFF;
       color: #0A3D4F;
-      font-size: 12px; font-weight: 700;
+      font-size: 13px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
     .detail-title {
-      font-size: 15px; font-weight: 700;
+      font-size: 16px; font-weight: 700;
       color: #1F2937;
     }
     .detail-badge {
       font-size: 10px; font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.3px;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 4px;
       margin-left: auto;
     }
     .detail-text {
-      font-size: 13px;
+      font-size: 14px;
       color: #4B5563;
-      line-height: 1.45;
+      line-height: 1.5;
+      margin-bottom: 12px;
     }
+    .detail-spacer { flex: 1; }
+    .detail-hint {
+      font-size: 11px;
+      color: #9CA3AF;
+      border-top: 1px solid #F3F4F6;
+      padding-top: 10px;
+      line-height: 1.4;
+    }
+    .detail-hint strong { color: #0A3D4F; }
 
-    /* Course coverage bar */
     .coverage {
-      margin-top: 10px;
-      background: #F9FAFB;
+      margin-top: 8px;
+      background: #fff;
       border: 1px solid #E5E7EB;
       border-radius: 8px;
       padding: 10px 14px;
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-shrink: 0;
     }
     .coverage-dot {
       width: 8px; height: 8px;
@@ -214,9 +210,7 @@
       color: #6B7280;
       line-height: 1.3;
     }
-    .coverage-text strong {
-      color: #0A3D4F;
-    }
+    .coverage-text strong { color: #0A3D4F; }
 
     @media (max-width: 580px) {
       .step-label { font-size: 9px; }
@@ -232,67 +226,46 @@
 <script>
 var STEPS = [
   {
-    num: 1,
-    short: "Select Finalist",
-    role: "you",
-    roleLabel: "You",
-    active: false,
+    num: 1, short: "Select Finalist", role: "you", roleLabel: "You", active: false,
     title: "Select Your Finalist",
-    text: "You\u2019ve completed interviews and evaluations. The decision is made \u2014 you know who you want to hire. This step is already done by the time you reach this course."
+    text: "You\u2019ve completed interviews and evaluations. The decision is made \u2014 you know who you want to hire. This step is already done by the time you reach this course.",
+    hint: ""
   },
   {
-    num: 2,
-    short: "Submit HRDESK Request",
-    role: "you",
-    roleLabel: "You",
-    active: true,
+    num: 2, short: "Submit HRDESK Request", role: "you", roleLabel: "You", active: true,
     title: "Submit Your HRDESK Ticket",
-    text: "Fill out the HRDESK Agreement Request form in Jira with all required details: candidate name, salary, job title, start date, employment type, and ZIP ticket number. This is your primary action step."
+    text: "Fill out the HRDESK Agreement Request form in Jira with all required details: candidate\u2019s legal name, salary, job title, start date, employment type, and ZIP ticket number. This is your primary action step \u2014 the quality of your ticket directly determines how fast everything moves.",
+    hint: ""
   },
   {
-    num: 3,
-    short: "HR Reviews & Drafts",
-    role: "hr",
-    roleLabel: "HR",
-    active: true,
+    num: 3, short: "HR Reviews & Drafts", role: "hr", roleLabel: "HR", active: true,
     title: "HR Reviews & Drafts the Agreement",
-    text: "HR Compliance reviews your submission, drafts the agreement using the correct regional template, and runs background checks in parallel. You may be contacted for clarifications."
+    text: "HR Compliance reviews your submission, drafts the agreement using the correct regional template, and runs background checks in parallel. You may be contacted for clarifications \u2014 stay responsive.",
+    hint: ""
   },
   {
-    num: 4,
-    short: "Approvals & Compliance",
-    role: "both",
-    roleLabel: "HR + Legal",
-    active: true,
+    num: 4, short: "Approvals & Compliance", role: "both", roleLabel: "HR + Legal", active: true,
     title: "Approvals & Compliance Review",
-    text: "If non-standard contract terms are needed, Legal reviews the draft. Total Rewards and People Operations confirm compensation alignment. You stay available for questions."
+    text: "If non-standard contract terms are needed, Legal reviews the draft. Total Rewards and People Operations confirm compensation alignment. You stay available for questions but don\u2019t need to take action.",
+    hint: ""
   },
   {
-    num: 5,
-    short: "Candidate Signs",
-    role: "hr",
-    roleLabel: "HR + DCT",
-    active: true,
+    num: 5, short: "Candidate Signs", role: "hr", roleLabel: "HR + DCT", active: true,
     title: "Candidate Signs the Agreement",
-    text: "The Document Control Team sends the finalized agreement to the candidate for signing. If the candidate is unresponsive after 2 days, HR will ask you to follow up directly."
+    text: "The Document Control Team sends the finalized agreement to the candidate for signing. If the candidate is unresponsive after 2 days, HR will ask you to follow up directly.",
+    hint: ""
   },
   {
-    num: 6,
-    short: "Close Role & Archive",
-    role: "you",
-    roleLabel: "You",
-    active: true,
+    num: 6, short: "Close Role & Archive", role: "you", roleLabel: "You", active: true,
     title: "Close the Role & Archive Candidates",
-    text: "Archive all remaining candidates in Lever with accurate reasons, close the posting and requisition, verify dashboards, and send disposition communications. SLA: 5 days to archive, 10 days to close."
+    text: "Archive all remaining candidates in Lever with accurate reasons, close the posting and requisition, verify dashboards, and send disposition communications. SLA: 5 days to archive, 10 days to close the role.",
+    hint: ""
   },
   {
-    num: 7,
-    short: "Onboarding Begins",
-    role: "both",
-    roleLabel: "You + HR",
-    active: false,
+    num: 7, short: "Onboarding Begins", role: "both", roleLabel: "You + HR", active: false,
     title: "Onboarding Begins",
-    text: "HR uploads the signed contract to HiBob, IT sets up equipment (14 days), and you coordinate first-day logistics with the onboarding team. Your new hire is on the way!"
+    text: "HR uploads the signed contract to HiBob, IT sets up equipment (14 business days), and you coordinate first-day logistics with the onboarding team. Your new hire is on the way!",
+    hint: ""
   }
 ];
 
@@ -306,11 +279,12 @@ function render() {
     var isActive = s.active;
     var isSel = i === sel;
     var circleClass = isActive ? 'step-circle current' : 'step-circle before';
-    var stepClass = 'step' + (isActive ? ' active' : '') + (isSel ? ' selected' : '');
+    var stepClass = 'step' + (isActive ? ' active' : '');
+
     var roleClass = s.role === 'you' ? 'role-you' : s.role === 'hr' ? 'role-hr' : 'role-both';
 
     return '<div class="' + stepClass + '" data-idx="' + i + '">' +
-      '<div class="' + circleClass + '" style="' + (isSel ? 'transform:scale(1.15);' : '') + '">' + s.num + '</div>' +
+      '<div class="' + circleClass + '" style="' + (isSel ? 'transform:scale(1.15);box-shadow:0 0 0 4px rgba(128,234,255,0.35);' : '') + '">' + s.num + '</div>' +
       '<div class="step-label">' + s.short + '</div>' +
       '<div class="step-role ' + roleClass + '">' + s.roleLabel + '</div>' +
     '</div>';
@@ -326,12 +300,13 @@ function render() {
         '<div class="detail-badge ' + badgeClass + '">' + step.roleLabel + '</div>' +
       '</div>' +
       '<div class="detail-text">' + step.text + '</div>' +
+      '<div class="detail-spacer"></div>' +
     '</div>';
 
   var coverageHtml =
     '<div class="coverage">' +
       '<div class="coverage-dot"></div>' +
-      '<div class="coverage-text"><strong>This course covers Steps 2\u20136</strong> \u2014 from submitting your HRDESK request to closing the role in Lever. Tap each step to learn more.</div>' +
+      '<div class="coverage-text"><strong>This course covers Steps 2\u20136</strong> \u2014 from submitting your HRDESK request to closing the role in Lever. Click each step above to explore.</div>' +
     '</div>';
 
   document.getElementById('root').innerHTML =
