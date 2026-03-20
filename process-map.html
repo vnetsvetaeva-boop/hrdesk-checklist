@@ -19,30 +19,38 @@ body{font-family:'Bai Jamjuree',sans-serif;background:#fff;color:#000;padding:20
 .step.active:hover{background:rgba(128,234,255,.08)}
 
 .step:not(:last-child)::after{content:'';position:absolute;top:28px;left:calc(50% + 22px);width:calc(100% - 44px);height:2.5px;background:#ecedea;z-index:0}
+.step.done:not(:last-child)::after{background:#10B981}
 .step.active:not(:last-child)::after{background:#80EAFF}
 
 .step-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;position:relative;z-index:1;transition:all .2s}
 .step-circle.off{background:#f4f4f3;color:#aaa;border:2px solid #ecedea}
 .step-circle.on{background:#80EAFF;color:#0A3D4F;border:2.5px solid #50D0ED}
+.step-circle.completed{background:#10B981;color:#fff;border:2.5px solid #059669}
 .step-circle.sel{box-shadow:0 0 0 5px rgba(128,234,255,.35);transform:scale(1.12)}
 
 .step-label{font-size:14px;font-weight:600;color:#999;text-align:center;margin-top:8px;line-height:1.3}
 .step.active .step-label{color:#000;font-weight:700}
+.step.done .step-label{color:#777;font-weight:600}
 
 .step-role{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-top:4px;padding:3px 8px;border-radius:4px}
-.role-you{background:#E0F7FF;color:#0E7490}
-.role-hr{background:#f4f4f3;color:#999}
-.role-both{background:#ECFDF5;color:#065F46}
 
 .detail{background:#f7f7f5;border-left:4px solid #80EAFF;padding:22px 26px;border-radius:0 10px 10px 0;margin-bottom:16px}
-.detail-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.detail.detail-done{border-left-color:#10B981}
+.detail.detail-soon{border-left-color:#ecedea}
+.detail-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .detail-num{width:32px;height:32px;border-radius:50%;background:#80EAFF;color:#0A3D4F;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.detail-num.num-done{background:#10B981;color:#fff}
+.detail-num.num-soon{background:#f4f4f3;color:#aaa}
 .detail-title{font-size:22px;font-weight:700;color:#000}
 .detail-badge{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;padding:4px 10px;border-radius:5px;margin-left:auto}
 .detail-text{font-size:18px;font-weight:500;color:#333;line-height:1.6}
 
 .coverage{background:#f7f7f5;border:1px solid #ecedea;border-radius:10px;padding:14px 20px;font-size:16px;color:#555;line-height:1.5;text-align:center}
 .coverage strong{color:#000}
+
+.role-you{background:#E0F7FF;color:#0E7490}
+.role-hr{background:#f4f4f3;color:#999}
+.role-both{background:#ECFDF5;color:#065F46}
 </style>
 </head>
 <body>
@@ -55,29 +63,26 @@ body{font-family:'Bai Jamjuree',sans-serif;background:#fff;color:#000;padding:20
 
 <div class="steps" id="steps"></div>
 <div id="detail"></div>
-<div class="coverage"><strong>This course covers Steps 2–6</strong> — from submitting your HRDESK request to closing the role in Lever.</div>
+<div class="coverage"><strong>This course covers Steps 2–5</strong> — from moving your HSD ticket to closing the role in Lever.</div>
 
 <script>
 var STEPS=[
-  {num:1,short:"Select Finalist",role:"you",roleLabel:"You",active:false,
-   title:"Select Your Finalist",
+  {num:1,short:"Select Final Candidate",role:"you",roleLabel:"You",active:false,status:"done",
+   title:"Select Your Final Candidate",
    text:"You\u2019ve completed interviews and evaluations. The decision is made \u2014 you know who you want to hire. This step is already done by the time you reach this course."},
-  {num:2,short:"Submit HRDESK Request",role:"you",roleLabel:"You",active:true,
-   title:"Submit Your HRDESK Ticket",
-   text:"Fill out the HRDESK Agreement Request form in Jira with all required details: candidate\u2019s legal name, salary, job title, start date, employment type, and ZIP ticket number. This is your primary action step."},
-  {num:3,short:"HR Reviews & Drafts",role:"hr",roleLabel:"HR",active:true,
+  {num:2,short:"Move HSD Ticket to \u201COffer\u201D",role:"you",roleLabel:"You",active:true,status:"here",
+   title:"Move HSD Ticket Status to \u201COffer\u201D & Enter Candidate Data",
+   text:"Move your HSD ticket to \u201COffer\u201D status and enter the required candidate data:<br><br><b>Name of Hire</b> \u2014 correct legal spelling of the candidate\u2019s name.<br><b>Equipment</b> \u2014 whether the candidate will need equipment.<br><b>Additional details for contract/offer</b> \u2014 any additional information relevant to the contract."},
+  {num:3,short:"HR Reviews & Drafts",role:"both",roleLabel:"HR + Legal",active:true,status:"next",
    title:"HR Reviews & Drafts the Agreement",
-   text:"HR Compliance reviews your submission, drafts the agreement using the correct regional template, and runs background checks in parallel. You may be contacted for clarifications \u2014 stay responsive."},
-  {num:4,short:"Approvals & Compliance",role:"both",roleLabel:"HR + Legal",active:true,
-   title:"Approvals & Compliance Review",
-   text:"If non-standard contract terms are needed, Legal reviews the draft. Total Rewards and People Operations confirm compensation alignment. You stay available for questions but don\u2019t need to take action."},
-  {num:5,short:"Candidate Signs",role:"hr",roleLabel:"HR + DCT",active:true,
+   text:"HR Compliance reviews your submission, drafts the agreement using the correct regional template, and runs background checks in parallel. If non-standard contract terms are needed, Legal reviews the draft. You may be contacted for clarifications \u2014 stay responsive."},
+  {num:4,short:"Candidate Signs",role:"hr",roleLabel:"HR + DCT",active:true,status:"next",
    title:"Candidate Signs the Agreement",
    text:"The Document Control Team sends the finalized agreement to the candidate for signing. If the candidate is unresponsive after 2 days, HR will ask you to follow up directly."},
-  {num:6,short:"Close Role & Archive",role:"you",roleLabel:"You",active:true,
-   title:"Close the Role & Archive Candidates",
+  {num:5,short:"Close Role & Archive",role:"you",roleLabel:"You",active:true,status:"next",
+   title:"Close the Role & Archive in Lever",
    text:"Archive all remaining candidates in Lever with accurate reasons, close the posting and requisition, verify dashboards, and send disposition communications. SLA: 5 days to archive, 10 days to close."},
-  {num:7,short:"Onboarding Begins",role:"both",roleLabel:"You + HR",active:false,
+  {num:6,short:"Onboarding Begins",role:"both",roleLabel:"You + HR",active:false,status:"soon",
    title:"Onboarding Begins",
    text:"HR uploads the signed contract to HiBob, IT sets up equipment (14 business days), and you coordinate first-day logistics with the onboarding team. Your new hire is on the way!"}
 ];
@@ -89,12 +94,14 @@ function render(){
   var detailEl=document.getElementById('detail');
 
   stepsEl.innerHTML=STEPS.map(function(s,i){
-    var circCls=s.active?'step-circle on':'step-circle off';
+    var circCls=s.status==='done'?'step-circle completed':s.active?'step-circle on':'step-circle off';
     if(i===sel)circCls+=' sel';
-    var stepCls='step'+(s.active?' active':'');
+    var stepCls='step';
+    if(s.status==='done')stepCls+=' done';
+    else if(s.active)stepCls+=' active';
     var roleCls=s.role==='you'?'role-you':s.role==='hr'?'role-hr':'role-both';
     return '<div class="'+stepCls+'" data-idx="'+i+'">'+
-      '<div class="'+circCls+'">'+s.num+'</div>'+
+      '<div class="'+circCls+'">'+(s.status==='done'?'\u2713':s.num)+'</div>'+
       '<div class="step-label">'+s.short+'</div>'+
       '<div class="step-role '+roleCls+'">'+s.roleLabel+'</div>'+
     '</div>';
@@ -102,10 +109,12 @@ function render(){
 
   var s=STEPS[sel];
   var badgeCls=s.role==='you'?'role-you':s.role==='hr'?'role-hr':'role-both';
+  var detailCls='detail'+(s.status==='done'?' detail-done':s.status==='soon'?' detail-soon':'');
+  var numCls='detail-num'+(s.status==='done'?' num-done':s.status==='soon'?' num-soon':'');
   detailEl.innerHTML=
-    '<div class="detail">'+
+    '<div class="'+detailCls+'">'+
       '<div class="detail-header">'+
-        '<div class="detail-num">'+s.num+'</div>'+
+        '<div class="'+numCls+'">'+(s.status==='done'?'\u2713':s.num)+'</div>'+
         '<div class="detail-title">'+s.title+'</div>'+
         '<div class="detail-badge '+badgeCls+'">'+s.roleLabel+'</div>'+
       '</div>'+
